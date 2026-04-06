@@ -121,7 +121,7 @@ async function processCheckout(mode) {
   showMessage('Procesando solicitud y simulación de pago...');
 
   try {
-    const response = await fetch('backend/checkout.php', {
+    const response = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
