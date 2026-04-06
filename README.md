@@ -1,63 +1,146 @@
-# Demo de checkout (HTML + CSS + JS + PHP)
+# WebVentas Chile - Base comercial de desarrollo web (HTML + CSS + JS + PHP)
 
-Este proyecto es una demo mínima y funcional de un flujo de checkout.
+Proyecto profesional y reutilizable para vender servicios de creación de páginas web personalizadas en Chile.
+Incluye catálogo de servicios, planes, carrito funcional, checkout validado, formulario de contacto y backend PHP con simulación de pago preparada para integrar Webpay Plus de Transbank.
 
-## Estructura del proyecto
+## 1) Estructura de archivos
 
-- `index.html`: interfaz principal con formulario de pago.
-- `style.css`: estilos visuales de la pantalla.
-- `script.js`: validación en cliente y llamada `fetch` al backend.
-- `backend/checkout.php`: endpoint que valida y simula el cobro.
+```txt
+.
+├── index.html
+├── style.css
+├── script.js
+├── backend/
+│   └── checkout.php
+└── README.md
+```
 
-## Requisitos
+> Todos los archivos son texto plano y están listos para editar y reutilizar.
 
-- Servidor web con PHP 8+ (recomendado).
+## 2) ¿Qué incluye esta base funcional?
 
-## Ejecución local rápida
+- **Landing comercial completa** con enfoque de conversión.
+- **Header fijo** con navegación y CTA.
+- **Hero principal** con propuesta de valor y botones de acción.
+- **Sección de servicios** con tarjetas y precios en CLP.
+- **Catálogo de planes** tipo producto con opción recomendado.
+- **Carrito funcional (JS)**:
+  - Agregar productos
+  - Eliminar productos
+  - Vaciar carrito
+  - Cálculo de subtotal/total y resumen de pedido
+- **Checkout validado**:
+  - Nombre, Apellido, Correo, Teléfono, Empresa, Comentarios
+  - Validaciones HTML5 + validación backend
+- **Pago simulado funcional (Opción B)**:
+  - Simular éxito o rechazo
+  - Respuesta estructurada similar a una transacción
+- **Secciones comerciales adicionales**:
+  - Cómo trabajamos
+  - Portafolio ficticio por rubro
+  - Testimonios
+  - FAQ
+  - Footer completo
+- **SEO básico**:
+  - meta description, keywords, author, robots y Open Graph
+- **Botones de WhatsApp** en flotante y CTA final.
 
-Desde la raíz del proyecto:
+## 3) Ejecución local
+
+### Requisitos
+- PHP 8.0+ (recomendado 8.1 o superior)
+
+### Pasos
+1. Abre una terminal en la raíz del proyecto.
+2. Ejecuta:
 
 ```bash
 php -S localhost:8000
 ```
 
-Luego abre:
+3. Abre en navegador:
 
-- `http://localhost:8000/index.html`
-
-## Flujo funcional
-
-1. El usuario completa nombre, email y monto.
-2. `script.js` valida los campos en navegador.
-3. Se envía un `POST` JSON a `backend/checkout.php`.
-4. El backend valida los datos y retorna JSON:
-   - éxito: `ok`, `transaccionId`, datos del cliente y monto.
-   - error: mensaje en `error` con código HTTP adecuado.
-
-## Ejemplo de request
-
-```json
-{
-  "nombre": "Ana Pérez",
-  "email": "ana@example.com",
-  "monto": 49.99
-}
+```txt
+http://localhost:8000/index.html
 ```
 
-## Ejemplo de respuesta exitosa
+## 4) Flujo de compra y checkout
 
-```json
-{
-  "ok": true,
-  "transaccionId": "TX-1A2B3C4D",
-  "nombre": "Ana Pérez",
-  "email": "ana@example.com",
-  "monto": 49.99,
-  "mensaje": "Pago procesado correctamente."
-}
-```
+1. El usuario agrega servicios/planes al carrito.
+2. El frontend calcula montos y genera resumen dinámico.
+3. En checkout se validan campos obligatorios.
+4. Se envía payload JSON a `backend/checkout.php`.
+5. El backend:
+   - Valida cliente
+   - Valida ítems y total
+   - Genera `buy_order`, `session_id` y token simulado
+   - Responde pago simulado exitoso o rechazado
 
-## Notas
+## 5) Integración de Webpay Plus (ambiente de pruebas)
 
-- Todos los archivos del proyecto son texto plano (sin binarios).
-- No se incluyen imágenes, zips ni artefactos generados automáticamente.
+La implementación actual es simulada para que puedas vender demos sin credenciales reales.
+
+### ¿Cómo conectarlo a Webpay real?
+
+1. Instala SDK oficial:
+   ```bash
+   composer require transbank/transbank-sdk
+   ```
+2. Crea método real para **crear transacción** (`create`) y **confirmar transacción** (`commit`).
+3. Reemplaza en `backend/checkout.php` la función `simulateWebpayTransaction()` por llamadas reales al SDK.
+4. Usa credenciales por entorno (variables de entorno), por ejemplo:
+   - `TRANSBANK_COMMERCE_CODE`
+   - `TRANSBANK_API_KEY`
+5. Define URLs de retorno (`return_url`) para recibir confirmación del pago.
+6. Guarda cada transacción en base de datos con estado pendiente/aprobado/rechazado.
+
+### Buenas prácticas
+- No subir claves al repositorio.
+- Separar configuración de ambientes (integración/producción).
+- Registrar logs de intentos y respuestas de la pasarela.
+- Validar en backend que total recibido coincide con pedido persistido.
+
+## 6) Preparación para base de datos futura
+
+`backend/checkout.php` incluye comentarios con modelo sugerido para:
+- `orders`
+- `order_items`
+
+Más adelante puedes conectar MySQL/PostgreSQL y persistir:
+- datos de cliente
+- detalle de ítems
+- estado de pago
+- historial de transacciones
+
+## 7) Personalización para vender a otros rubros
+
+Para transformar esta base en una plantilla comercializable:
+
+1. **Branding por cliente**
+   - Cambia logo/nombre, paleta de colores y tipografías.
+2. **Catálogo adaptable**
+   - Reemplaza planes y servicios según industria (salud, legal, educación, etc.).
+3. **Módulos reutilizables**
+   - Activa/desactiva secciones (testimonios, FAQ, portafolio) según proyecto.
+4. **Integraciones por vertical**
+   - Reservas (salud, belleza)
+   - Cotizaciones (construcción, industria)
+   - E-commerce (retail)
+5. **Upselling técnico**
+   - Mantenimiento mensual
+   - SEO continuo
+   - Automatización de ventas y CRM
+
+## 8) Archivos clave para edición rápida
+
+- `index.html`: estructura de contenido comercial y secciones.
+- `style.css`: estilos, responsividad y apariencia moderna.
+- `script.js`: carrito, resumen, validaciones frontend y conexión backend.
+- `backend/checkout.php`: validaciones de servidor y flujo de pago simulado/preparado para Webpay.
+
+---
+
+Si quieres, como siguiente paso puedo convertir esta base en:
+- versión multi-página,
+- plantilla con panel simple de administración,
+- o versión conectada a base de datos real + Webpay de pruebas end-to-end.
