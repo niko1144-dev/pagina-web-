@@ -1,33 +1,362 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-CL">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Checkout Demo</title>
+    <title>WebVentas Chile | Páginas web que venden más</title>
+    <meta
+      name="description"
+      content="Creamos páginas web profesionales en Chile: sitios corporativos, tiendas online, catálogos digitales y soluciones personalizadas para hacer crecer tu negocio."
+    />
+    <meta
+      name="keywords"
+      content="desarrollo web Chile, tiendas online, páginas web personalizadas, landing page, webpay, diseño web"
+    />
+    <meta name="author" content="WebVentas Chile" />
+    <meta name="robots" content="index,follow" />
+    <meta property="og:title" content="WebVentas Chile | Desarrollo web personalizado" />
+    <meta
+      property="og:description"
+      content="Modelos web listos para vender: carrito, checkout y flujo de pago preparado para Webpay Plus."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CL" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <main class="container">
-      <section class="card">
-        <h1>Finalizar compra</h1>
-        <p class="subtitle">Completa tus datos para procesar el pedido.</p>
+    <a
+      class="whatsapp-float"
+      href="https://wa.me/56912345678?text=Hola%20WebVentas%20Chile%2C%20quiero%20cotizar%20mi%20p%C3%A1gina%20web"
+      target="_blank"
+      rel="noopener"
+      aria-label="Escríbenos por WhatsApp"
+      >WhatsApp</a
+    >
 
-        <form id="checkout-form" novalidate>
-          <label for="nombre">Nombre completo</label>
-          <input id="nombre" name="nombre" type="text" required minlength="3" />
+    <header class="site-header" id="inicio">
+      <div class="container nav-wrap">
+        <a href="#inicio" class="logo">WebVentas <span>Chile</span></a>
+        <nav class="nav" aria-label="Principal">
+          <a href="#servicios">Servicios</a>
+          <a href="#planes">Planes</a>
+          <a href="#proceso">Cómo trabajamos</a>
+          <a href="#portafolio">Portafolio</a>
+          <a href="#faq">FAQ</a>
+          <a href="#contacto">Contacto</a>
+        </nav>
+        <a href="#checkout" class="btn btn-outline">Solicitar cotización</a>
+      </div>
+    </header>
 
-          <label for="email">Correo electrónico</label>
-          <input id="email" name="email" type="email" required />
+    <main>
+      <section class="hero section">
+        <div class="container hero-grid">
+          <div>
+            <p class="eyebrow">Impulsa tu negocio con tecnología comercial</p>
+            <h1>Páginas web personalizadas en Chile diseñadas para convertir visitas en ventas.</h1>
+            <p class="lead">
+              Creamos sitios rápidos, modernos y escalables para emprendedores, pymes y empresas. Desde landing pages
+              hasta e-commerce completo con integración de pagos.
+            </p>
+            <div class="hero-actions">
+              <a href="#planes" class="btn">Ver Planes</a>
+              <a href="#checkout" class="btn btn-secondary">Solicitar Cotización</a>
+            </div>
+            <p class="hero-trust">+80 proyectos demo y comerciales desarrollados para distintos rubros en Chile.</p>
+          </div>
+          <aside class="highlight-card">
+            <h2>Desarrollamos webs para cualquier tipo de negocio</h2>
+            <ul>
+              <li>Tiendas online y catálogos digitales</li>
+              <li>Servicios profesionales y negocios locales</li>
+              <li>Reservas, captación de leads y ventas directas</li>
+              <li>Escalable para campañas, SEO y automatizaciones</li>
+            </ul>
+            <a href="#servicios" class="link-inline">Explorar soluciones →</a>
+          </aside>
+        </div>
+      </section>
 
-          <label for="monto">Monto (USD)</label>
-          <input id="monto" name="monto" type="number" step="0.01" min="1" required />
+      <section class="banner section-sm">
+        <div class="container">
+          <p>
+            <strong>Soluciones para diferentes rubros:</strong> restaurantes, clínicas, estudios jurídicos, ferreterías,
+            retail, educación, turismo, estética y más.
+          </p>
+        </div>
+      </section>
 
-          <button type="submit" id="submit-btn">Pagar ahora</button>
-        </form>
+      <section id="servicios" class="section">
+        <div class="container">
+          <h2>Servicios de desarrollo web</h2>
+          <p class="section-intro">Elige un servicio inicial y luego personalízalo según tu negocio.</p>
+          <div class="cards-grid" id="services-grid">
+            <article class="card product-card" data-type="service" data-id="srv-basica" data-name="Página Web Básica" data-price="199000">
+              <h3>Página web básica</h3>
+              <p>One-page profesional para presencia online rápida y efectiva.</p>
+              <p class="price">CLP $199.000</p>
+              <button class="btn add-to-cart">Agregar al carrito</button>
+            </article>
 
-        <pre id="result" aria-live="polite"></pre>
+            <article class="card product-card" data-type="service" data-id="srv-profesional" data-name="Página Web Profesional" data-price="349000">
+              <h3>Página web profesional</h3>
+              <p>Sitio multi-sección con enfoque corporativo, SEO base y formularios.</p>
+              <p class="price">CLP $349.000</p>
+              <button class="btn add-to-cart">Agregar al carrito</button>
+            </article>
+
+            <article class="card product-card" data-type="service" data-id="srv-tienda" data-name="Tienda Online" data-price="599000">
+              <h3>Tienda online</h3>
+              <p>E-commerce con carrito, checkout y estructura para pasarela de pago.</p>
+              <p class="price">CLP $599.000</p>
+              <button class="btn add-to-cart">Agregar al carrito</button>
+            </article>
+
+            <article class="card product-card" data-type="service" data-id="srv-catalogo" data-name="Catálogo Digital" data-price="289000">
+              <h3>Catálogo digital</h3>
+              <p>Vitrina digital para productos o servicios con navegación intuitiva.</p>
+              <p class="price">CLP $289.000</p>
+              <button class="btn add-to-cart">Agregar al carrito</button>
+            </article>
+
+            <article class="card product-card" data-type="service" data-id="srv-landing" data-name="Landing Page para Ventas" data-price="239000">
+              <h3>Landing page para ventas</h3>
+              <p>Página orientada a campañas, captación de leads y conversiones.</p>
+              <p class="price">CLP $239.000</p>
+              <button class="btn add-to-cart">Agregar al carrito</button>
+            </article>
+
+            <article class="card product-card" data-type="service" data-id="srv-sistema" data-name="Sistema Personalizado para Negocios" data-price="890000">
+              <h3>Sistema personalizado</h3>
+              <p>Solución a medida: reservas, panel de administración o flujos internos.</p>
+              <p class="price">Desde CLP $890.000</p>
+              <button class="btn add-to-cart">Solicitar</button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="planes" class="section section-alt">
+        <div class="container">
+          <h2>Catálogo de planes</h2>
+          <p class="section-intro">Planes listos para acelerar tu lanzamiento digital.</p>
+          <div class="cards-grid plans-grid">
+            <article class="card product-card" data-type="plan" data-id="plan-emprendedor" data-name="Plan Emprendedor" data-price="249000">
+              <p class="icon">🚀</p>
+              <h3>Plan Emprendedor</h3>
+              <ul>
+                <li>Hasta 5 secciones</li>
+                <li>Formulario de contacto</li>
+                <li>Optimización móvil</li>
+              </ul>
+              <p class="price">CLP $249.000</p>
+              <button class="btn add-to-cart">Agregar al carrito</button>
+            </article>
+
+            <article class="card product-card recommended" data-type="plan" data-id="plan-negocio" data-name="Plan Negocio" data-price="429000">
+              <span class="badge">Recomendado</span>
+              <p class="icon">💼</p>
+              <h3>Plan Negocio</h3>
+              <ul>
+                <li>Hasta 10 secciones</li>
+                <li>Blog o noticias</li>
+                <li>SEO técnico inicial</li>
+              </ul>
+              <p class="price">CLP $429.000</p>
+              <button class="btn add-to-cart">Agregar al carrito</button>
+            </article>
+
+            <article class="card product-card" data-type="plan" data-id="plan-tienda" data-name="Plan Tienda Online" data-price="679000">
+              <p class="icon">🛒</p>
+              <h3>Plan Tienda Online</h3>
+              <ul>
+                <li>Hasta 50 productos iniciales</li>
+                <li>Carrito + checkout</li>
+                <li>Preparado para Webpay Plus</li>
+              </ul>
+              <p class="price">CLP $679.000</p>
+              <button class="btn add-to-cart">Agregar al carrito</button>
+            </article>
+
+            <article class="card product-card" data-type="plan" data-id="plan-premium" data-name="Plan Premium Personalizado" data-price="1190000">
+              <p class="icon">⚙️</p>
+              <h3>Plan Premium Personalizado</h3>
+              <ul>
+                <li>Desarrollo a medida</li>
+                <li>Automatizaciones e integraciones</li>
+                <li>Acompañamiento estratégico</li>
+              </ul>
+              <p class="price">Desde CLP $1.190.000</p>
+              <button class="btn add-to-cart">Agregar al carrito</button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="carrito" class="section">
+        <div class="container">
+          <h2>Carrito de compra</h2>
+          <p class="section-intro">Revisa tu pedido antes de completar la solicitud.</p>
+          <div class="cart-box">
+            <ul id="cart-items" class="cart-items" aria-live="polite"></ul>
+            <div class="cart-totals">
+              <p>Subtotal: <strong id="subtotal">CLP $0</strong></p>
+              <p>Total: <strong id="total">CLP $0</strong></p>
+            </div>
+            <button class="btn btn-danger" id="clear-cart">Vaciar carrito</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="checkout" class="section section-alt">
+        <div class="container checkout-grid">
+          <div>
+            <h2>Checkout y solicitud de compra</h2>
+            <p class="section-intro">Completa tus datos y simula el pago. Luego podrás reemplazar el flujo con Webpay Plus.</p>
+            <form id="checkout-form" novalidate>
+              <div class="two-col">
+                <label>Nombre
+                  <input type="text" name="nombre" required minlength="2" />
+                </label>
+                <label>Apellido
+                  <input type="text" name="apellido" required minlength="2" />
+                </label>
+              </div>
+              <div class="two-col">
+                <label>Correo
+                  <input type="email" name="correo" required />
+                </label>
+                <label>Teléfono
+                  <input type="tel" name="telefono" required pattern="^[0-9+\s-]{8,15}$" />
+                </label>
+              </div>
+              <label>Empresa o negocio
+                <input type="text" name="empresa" required minlength="2" />
+              </label>
+              <label>Comentarios del proyecto
+                <textarea name="comentarios" rows="4" placeholder="Objetivo del sitio, rubro, plazos y funcionalidades."></textarea>
+              </label>
+              <div class="checkout-actions">
+                <button type="submit" class="btn" id="pay-success">Pagar (simular éxito)</button>
+                <button type="button" class="btn btn-danger" id="pay-fail">Simular rechazo</button>
+              </div>
+              <p class="small-note">Este flujo usa simulación funcional preparada para conectar Webpay Plus.</p>
+            </form>
+            <pre id="checkout-result" class="result-box" aria-live="polite"></pre>
+          </div>
+          <aside class="order-summary">
+            <h3>Resumen del pedido</h3>
+            <ul id="order-summary"></ul>
+            <p>Total estimado: <strong id="summary-total">CLP $0</strong></p>
+            <p class="small-note">*Valores referenciales en pesos chilenos, afectos a alcance final del proyecto.</p>
+          </aside>
+        </div>
+      </section>
+
+      <section id="proceso" class="section">
+        <div class="container">
+          <h2>Cómo trabajamos</h2>
+          <div class="steps-grid">
+            <article class="step"><h3>1. Contacto</h3><p>Reunión inicial para entender tu negocio y objetivos de venta.</p></article>
+            <article class="step"><h3>2. Requerimientos</h3><p>Levantamos funcionalidades, contenidos y alcance técnico.</p></article>
+            <article class="step"><h3>3. Diseño</h3><p>Propuesta visual enfocada en experiencia de usuario y conversión.</p></article>
+            <article class="step"><h3>4. Desarrollo</h3><p>Construcción del sitio con buenas prácticas y estructura escalable.</p></article>
+            <article class="step"><h3>5. Entrega</h3><p>Publicación, pruebas finales y traspaso de acceso/documentación.</p></article>
+            <article class="step"><h3>6. Soporte</h3><p>Ajustes, mejoras evolutivas y acompañamiento post-lanzamiento.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="portafolio" class="section section-alt">
+        <div class="container">
+          <h2>Portafolio de ejemplos (ficticios)</h2>
+          <div class="portfolio-grid">
+            <article class="portfolio-item"><h3>Restaurante Sabor Sur</h3><p>Reservas online y menú digital.</p></article>
+            <article class="portfolio-item"><h3>Tienda Moda Urbana</h3><p>E-commerce con promociones por temporada.</p></article>
+            <article class="portfolio-item"><h3>Ferretería Punto Pro</h3><p>Catálogo técnico y solicitud de cotización.</p></article>
+            <article class="portfolio-item"><h3>Clínica Vida Sana</h3><p>Agenda de horas y perfiles de especialistas.</p></article>
+            <article class="portfolio-item"><h3>Estudio Jurídico Andes</h3><p>Captación de casos y reputación corporativa.</p></article>
+            <article class="portfolio-item"><h3>Peluquería Estilo Vivo</h3><p>Reserva de turnos y campañas en redes.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="testimonios" class="section">
+        <div class="container">
+          <h2>Testimonios</h2>
+          <div class="cards-grid testimonials-grid">
+            <blockquote class="card">
+              “En 3 semanas pasamos de no tener web a recibir cotizaciones todos los días. Excelente proceso y soporte.”
+              <cite>— Camila R., Dueña de tienda de ropa</cite>
+            </blockquote>
+            <blockquote class="card">
+              “La nueva web mejoró nuestra imagen y cerramos más ventas por WhatsApp gracias al enfoque comercial.”
+              <cite>— Rodrigo M., Servicios técnicos</cite>
+            </blockquote>
+            <blockquote class="card">
+              “Profesional, claro y orientado a resultados. La integración de pagos quedó lista para crecer.”
+              <cite>— Valentina P., Emprendedora e-commerce</cite>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" class="section section-alt">
+        <div class="container">
+          <h2>Preguntas frecuentes</h2>
+          <div class="faq-list">
+            <details><summary>¿Cuánto demora una página web?</summary><p>Entre 7 y 30 días según complejidad, contenidos y validaciones.</p></details>
+            <details><summary>¿Incluye hosting?</summary><p>Podemos incluir plan de hosting y dominio como servicio adicional o trabajar con tu proveedor actual.</p></details>
+            <details><summary>¿Puedo pagar con Webpay?</summary><p>Sí. Esta base ya está preparada para integrar Webpay Plus en ambiente de pruebas y producción.</p></details>
+            <details><summary>¿Hacen tiendas online?</summary><p>Sí, desarrollamos tiendas con catálogo, carrito y checkout adaptable a tu modelo de negocio.</p></details>
+            <details><summary>¿Pueden personalizar según mi negocio?</summary><p>Totalmente. La propuesta se adapta a rubro, objetivos comerciales y procesos internos.</p></details>
+          </div>
+        </div>
+      </section>
+
+      <section id="contacto" class="section final-cta">
+        <div class="container">
+          <h2>¿Listo para vender más con una web profesional?</h2>
+          <p>Agenda una asesoría y recibe una propuesta clara, escalable y orientada a resultados reales.</p>
+          <div class="hero-actions">
+            <a href="#checkout" class="btn">Quiero mi propuesta</a>
+            <a
+              href="https://wa.me/56912345678?text=Hola%2C%20quiero%20empezar%20mi%20proyecto%20web"
+              class="btn btn-secondary"
+              target="_blank"
+              rel="noopener"
+              >Hablar por WhatsApp</a
+            >
+          </div>
+        </div>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <h3>WebVentas Chile</h3>
+          <p>Desarrollo de páginas web personalizadas para empresas y emprendedores de Chile.</p>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <ul>
+            <li>WhatsApp: +56 9 1234 5678</li>
+            <li>Email: contacto@webventaschile.cl</li>
+            <li>Santiago, Chile</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Redes</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">Facebook</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="copy">© <span id="year"></span> WebVentas Chile. Todos los derechos reservados.</p>
+    </footer>
 
     <script src="script.js"></script>
   </body>
