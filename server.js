@@ -34,7 +34,11 @@ function sanitizePathname(pathname) {
 
   return normalized
     .replace(/^([.][.][\/\\])+/, '')
+<<<<<<< HEAD
     .replace(/^[/\\]+/, '');
+=======
+    .replace(/^[\/\\]+/, '');
+>>>>>>> 2981c55b3f425ebfd4e3fb19f82dffc9dc083955
 }
 
 function serveStatic(req, res, parsedUrl) {
