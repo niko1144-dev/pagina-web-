@@ -26,8 +26,15 @@ function sendJson(res, statusCode, payload) {
 }
 
 function sanitizePathname(pathname) {
-  const normalized = path.normalize(pathname).replace(/^([.][.][\/\\])+/, '');
-  return normalized === '/' ? '/index.html' : normalized;
+  const normalized = path.normalize(pathname);
+
+  if (normalized === '/' || normalized === '\\') {
+    return 'index.html';
+  }
+
+  return normalized
+    .replace(/^([.][.][\/\\])+/, '')
+    .replace(/^[\/\\]+/, '');
 }
 
 function serveStatic(req, res, parsedUrl) {
@@ -41,6 +48,8 @@ function serveStatic(req, res, parsedUrl) {
 
   fs.readFile(filePath, (error, data) => {
     if (error) {
+      console.error('Error al leer archivo:', error);
+
       if (error.code === 'ENOENT') {
         sendJson(res, 404, { ok: false, error: 'Archivo no encontrado.' });
       } else {
