@@ -1,7 +1,7 @@
-# WebVentas Chile - Base comercial de desarrollo web (HTML + CSS + JS + PHP)
+# WebVentas Chile - Base comercial de desarrollo web (HTML + CSS + JS + Node.js)
 
 Proyecto profesional y reutilizable para vender servicios de creación de páginas web personalizadas en Chile.
-Incluye catálogo de servicios, planes, carrito funcional, checkout validado, formulario de contacto y backend PHP con simulación de pago preparada para integrar Webpay Plus de Transbank.
+Incluye catálogo de servicios, planes, carrito funcional, checkout validado, formulario de contacto y backend en Node.js con simulación de pago preparada para integrar Webpay Plus de Transbank.
 
 ## 1) Estructura de archivos
 
@@ -11,7 +11,8 @@ Incluye catálogo de servicios, planes, carrito funcional, checkout validado, fo
 ├── style.css
 ├── script.js
 ├── backend/
-│   └── checkout.php
+│   └── checkout.js
+├── server.js
 └── README.md
 ```
 
@@ -48,14 +49,14 @@ Incluye catálogo de servicios, planes, carrito funcional, checkout validado, fo
 ## 3) Ejecución local
 
 ### Requisitos
-- PHP 8.0+ (recomendado 8.1 o superior)
+- Node.js 18+ (recomendado 20 o superior)
 
 ### Pasos
 1. Abre una terminal en la raíz del proyecto.
 2. Ejecuta:
 
 ```bash
-php -S localhost:8000
+node server.js
 ```
 
 3. Abre en navegador:
@@ -69,7 +70,7 @@ http://localhost:8000/index.html
 1. El usuario agrega servicios/planes al carrito.
 2. El frontend calcula montos y genera resumen dinámico.
 3. En checkout se validan campos obligatorios.
-4. Se envía payload JSON a `backend/checkout.php`.
+4. Se envía payload JSON al endpoint `POST /api/checkout`.
 5. El backend:
    - Valida cliente
    - Valida ítems y total
@@ -87,7 +88,7 @@ La implementación actual es simulada para que puedas vender demos sin credencia
    composer require transbank/transbank-sdk
    ```
 2. Crea método real para **crear transacción** (`create`) y **confirmar transacción** (`commit`).
-3. Reemplaza en `backend/checkout.php` la función `simulateWebpayTransaction()` por llamadas reales al SDK.
+3. Reemplaza en `backend/checkout.js` la función `simulatePayment()` por llamadas reales al SDK/API del proveedor.
 4. Usa credenciales por entorno (variables de entorno), por ejemplo:
    - `TRANSBANK_COMMERCE_CODE`
    - `TRANSBANK_API_KEY`
@@ -102,7 +103,7 @@ La implementación actual es simulada para que puedas vender demos sin credencia
 
 ## 6) Preparación para base de datos futura
 
-`backend/checkout.php` incluye comentarios con modelo sugerido para:
+`backend/checkout.js` incluye validaciones y un flujo simulado con estructura preparada para:
 - `orders`
 - `order_items`
 
@@ -136,7 +137,8 @@ Para transformar esta base en una plantilla comercializable:
 - `index.html`: estructura de contenido comercial y secciones.
 - `style.css`: estilos, responsividad y apariencia moderna.
 - `script.js`: carrito, resumen, validaciones frontend y conexión backend.
-- `backend/checkout.php`: validaciones de servidor y flujo de pago simulado/preparado para Webpay.
+- `backend/checkout.js`: validaciones de servidor y flujo de pago simulado/preparado para Webpay.
+- `server.js`: servidor HTTP en Node.js para servir frontend + endpoint `/api/checkout`.
 
 ---
 
