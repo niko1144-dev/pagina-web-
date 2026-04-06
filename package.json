@@ -1,0 +1,22 @@
+{
+  "name": "pagina-web-",
+  "version": "1.0.0",
+  "description": "Proyecto profesional y reutilizable para vender servicios de creación de páginas web personalizadas en Chile.\r Incluye catálogo de servicios, planes, carrito funcional, checkout validado, formulario de contacto y backend en Node.js con simulación de pago preparada para integrar Webpay Plus de Transbank.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niko1144-dev/pagina-web-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/niko1144-dev/pagina-web-/issues"
+  },
+  "homepage": "https://github.com/niko1144-dev/pagina-web-#readme"
+}
