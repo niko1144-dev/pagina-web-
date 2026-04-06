@@ -11,12 +11,14 @@ Incluye catálogo de servicios, planes, carrito funcional, checkout validado, fo
 ├── style.css
 ├── script.js
 ├── backend/
-│   └── checkout.js
+│   ├── checkout.js
+│   └── database.js
+├── database/
+│   └── schema.sql
+├── .env.example
 ├── server.js
 └── README.md
 ```
-
-> Todos los archivos son texto plano y están listos para editar y reutilizar.
 
 ## 2) ¿Qué incluye esta base funcional?
 
@@ -36,36 +38,75 @@ Incluye catálogo de servicios, planes, carrito funcional, checkout validado, fo
 - **Pago simulado funcional (Opción B)**:
   - Simular éxito o rechazo
   - Respuesta estructurada similar a una transacción
+- **Persistencia SQL (MySQL)**:
+  - Guarda pedidos en `orders`
+  - Guarda detalle de pedido en `order_items`
+  - Compatible con hosting SQL estándar como BenzaHosting
 - **Secciones comerciales adicionales**:
   - Cómo trabajamos
   - Portafolio ficticio por rubro
   - Testimonios
   - FAQ
   - Footer completo
-- **SEO básico**:
-  - meta description, keywords, author, robots y Open Graph
-- **Botones de WhatsApp** en flotante y CTA final.
 
 ## 3) Ejecución local
 
 ### Requisitos
 - Node.js 18+ (recomendado 20 o superior)
+- Dependencias instaladas:
+
+```bash
+npm install
+```
 
 ### Pasos
-1. Abre una terminal en la raíz del proyecto.
-2. Ejecuta:
+1. Copia variables de entorno:
+
+```bash
+cp .env.example .env
+```
+
+2. Configura tus credenciales SQL en `.env`.
+3. Levanta servidor:
 
 ```bash
 node server.js
 ```
 
-3. Abre en navegador:
+4. Abre en navegador:
 
 ```txt
 http://localhost:8000/index.html
 ```
 
-## 4) Flujo de compra y checkout
+## 4) Configurar SQL en BenzaHosting
+
+1. En cPanel de BenzaHosting crea:
+   - Base de datos MySQL
+   - Usuario MySQL
+   - Asigna permisos ALL PRIVILEGES al usuario
+2. Importa `database/schema.sql` en phpMyAdmin.
+3. En tu servidor Node configura variables de entorno:
+
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=tu_base_de_datos
+DB_USER=tu_usuario
+DB_PASSWORD=tu_password
+```
+
+4. Instala dependencia del driver (si no está instalada):
+
+```bash
+npm install mysql2
+```
+
+5. Reinicia tu app Node.
+
+> Si las variables no están configuradas, el checkout sigue funcionando, pero el backend responderá que no se persistió en SQL.
+
+## 5) Flujo de compra y checkout
 
 1. El usuario agrega servicios/planes al carrito.
 2. El frontend calcula montos y genera resumen dinámico.
@@ -75,74 +116,19 @@ http://localhost:8000/index.html
    - Valida cliente
    - Valida ítems y total
    - Genera `buy_order`, `session_id` y token simulado
-   - Responde pago simulado exitoso o rechazado
+   - Simula autorización/rechazo de pago
+   - Inserta pedido en SQL (si DB está configurada)
 
-## 5) Integración de Webpay Plus (ambiente de pruebas)
+## 6) Integración de Webpay Plus (ambiente de pruebas)
 
-La implementación actual es simulada para que puedas vender demos sin credenciales reales.
+La implementación actual de pago es simulada para venta de demos. La capa SQL ya está lista para guardar estado transaccional.
 
-### ¿Cómo conectarlo a Webpay real?
-
-1. Instala SDK oficial:
-   ```bash
-   composer require transbank/transbank-sdk
-   ```
-2. Crea método real para **crear transacción** (`create`) y **confirmar transacción** (`commit`).
-3. Reemplaza en `backend/checkout.js` la función `simulatePayment()` por llamadas reales al SDK/API del proveedor.
-4. Usa credenciales por entorno (variables de entorno), por ejemplo:
-   - `TRANSBANK_COMMERCE_CODE`
-   - `TRANSBANK_API_KEY`
-5. Define URLs de retorno (`return_url`) para recibir confirmación del pago.
-6. Guarda cada transacción en base de datos con estado pendiente/aprobado/rechazado.
-
-### Buenas prácticas
-- No subir claves al repositorio.
-- Separar configuración de ambientes (integración/producción).
-- Registrar logs de intentos y respuestas de la pasarela.
-- Validar en backend que total recibido coincide con pedido persistido.
-
-## 6) Preparación para base de datos futura
-
-`backend/checkout.js` incluye validaciones y un flujo simulado con estructura preparada para:
-- `orders`
-- `order_items`
-
-Más adelante puedes conectar MySQL/PostgreSQL y persistir:
-- datos de cliente
-- detalle de ítems
-- estado de pago
-- historial de transacciones
-
-## 7) Personalización para vender a otros rubros
-
-Para transformar esta base en una plantilla comercializable:
-
-1. **Branding por cliente**
-   - Cambia logo/nombre, paleta de colores y tipografías.
-2. **Catálogo adaptable**
-   - Reemplaza planes y servicios según industria (salud, legal, educación, etc.).
-3. **Módulos reutilizables**
-   - Activa/desactiva secciones (testimonios, FAQ, portafolio) según proyecto.
-4. **Integraciones por vertical**
-   - Reservas (salud, belleza)
-   - Cotizaciones (construcción, industria)
-   - E-commerce (retail)
-5. **Upselling técnico**
-   - Mantenimiento mensual
-   - SEO continuo
-   - Automatización de ventas y CRM
-
-## 8) Archivos clave para edición rápida
+## 7) Archivos clave para edición rápida
 
 - `index.html`: estructura de contenido comercial y secciones.
 - `style.css`: estilos, responsividad y apariencia moderna.
 - `script.js`: carrito, resumen, validaciones frontend y conexión backend.
-- `backend/checkout.js`: validaciones de servidor y flujo de pago simulado/preparado para Webpay.
-- `server.js`: servidor HTTP en Node.js para servir frontend + endpoint `/api/checkout`.
-
----
-
-Si quieres, como siguiente paso puedo convertir esta base en:
-- versión multi-página,
-- plantilla con panel simple de administración,
-- o versión conectada a base de datos real + Webpay de pruebas end-to-end.
+- `backend/checkout.js`: validaciones de servidor, simulación y persistencia SQL.
+- `backend/database.js`: conexión MySQL y transacción de guardado.
+- `database/schema.sql`: esquema SQL inicial.
+- `server.js`: servidor HTTP en Node.js para frontend + endpoint `/api/checkout`.

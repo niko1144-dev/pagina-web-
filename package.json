@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/niko1144-dev/pagina-web-/issues"
   },
-  "homepage": "https://github.com/niko1144-dev/pagina-web-#readme"
+  "homepage": "https://github.com/niko1144-dev/pagina-web-#readme",
+  "dependencies": {
+    "mysql2": "^3.15.2"
+  }
 }
