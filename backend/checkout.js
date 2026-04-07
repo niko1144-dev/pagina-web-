@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const { saveOrder } = require('./database');
 
 function sendJson(res, statusCode, payload) {
   res.writeHead(statusCode, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -130,11 +131,27 @@ function handleCheckout(req, res) {
     }
   });
 
-  req.on('end', () => {
+  req.on('end', async () => {
     try {
       const payload = JSON.parse(body || '{}');
       const { customer, order, simulationMode } = validatePayload(payload);
       const paymentResult = simulatePayment(simulationMode, order.total);
+
+      const orderResponse = {
+        buy_order: generateBuyOrder(),
+        session_id: generateSessionId(),
+        token: generateToken(),
+        amount: order.total,
+        currency: order.currency,
+        items_count: order.items.length,
+        items: order.items
+      };
+
+      const dbStatus = await saveOrder({
+        customer,
+        order: orderResponse,
+        payment: paymentResult
+      });
 
       sendJson(res, 200, {
         ok: true,
@@ -144,14 +161,11 @@ function handleCheckout(req, res) {
             : 'Pago simulado como rechazado. Puedes reintentar o solicitar asistencia.',
         customer,
         order: {
-          buy_order: generateBuyOrder(),
-          session_id: generateSessionId(),
-          token: generateToken(),
-          amount: order.total,
-          currency: order.currency,
-          items_count: order.items.length
+          ...orderResponse,
+          database_order_id: dbStatus.orderId || null
         },
         payment: paymentResult,
+        database: dbStatus,
         integration_note:
           'Backend en Node.js listo para reemplazar la simulación por una pasarela real usando SDK/API del proveedor de pagos.'
       });

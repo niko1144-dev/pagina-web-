@@ -4,6 +4,34 @@ const path = require('path');
 const { URL } = require('url');
 const { handleCheckout } = require('./backend/checkout');
 
+function loadEnvFile() {
+  const envPath = path.join(__dirname, '.env');
+
+  if (!fs.existsSync(envPath)) {
+    return;
+  }
+
+  const content = fs.readFileSync(envPath, 'utf8');
+  const lines = content.split(/\r?\n/);
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+
+    const separator = trimmed.indexOf('=');
+    if (separator <= 0) continue;
+
+    const key = trimmed.slice(0, separator).trim();
+    const value = trimmed.slice(separator + 1).trim();
+
+    if (!process.env[key]) {
+      process.env[key] = value;
+    }
+  }
+}
+
+loadEnvFile();
+
 const PORT = Number(process.env.PORT || 8000);
 const ROOT_DIR = __dirname;
 
@@ -32,13 +60,7 @@ function sanitizePathname(pathname) {
     return 'index.html';
   }
 
-  return normalized
-    .replace(/^([.][.][\/\\])+/, '')
-<<<<<<< HEAD
-    .replace(/^[/\\]+/, '');
-=======
-    .replace(/^[\/\\]+/, '');
->>>>>>> 2981c55b3f425ebfd4e3fb19f82dffc9dc083955
+  return normalized.replace(/^([.][.][/\\])+/, '').replace(/^[\\/]+/, '');
 }
 
 function serveStatic(req, res, parsedUrl) {
@@ -65,6 +87,12 @@ function serveStatic(req, res, parsedUrl) {
     const ext = path.extname(filePath).toLowerCase();
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
     res.writeHead(200, { 'Content-Type': contentType });
+
+    if (req.method === 'HEAD') {
+      res.end();
+      return;
+    }
+
     res.end(data);
   });
 }
