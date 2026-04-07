@@ -38,10 +38,10 @@ Incluye catálogo de servicios, planes, carrito funcional, checkout validado, fo
 - **Pago simulado funcional (Opción B)**:
   - Simular éxito o rechazo
   - Respuesta estructurada similar a una transacción
-- **Persistencia SQL (MySQL)**:
-  - Guarda pedidos en `orders`
-  - Guarda detalle de pedido en `order_items`
-  - Compatible con hosting SQL estándar como BenzaHosting
+- **Persistencia híbrida (MySQL + Local)**:
+  - Guarda pedidos en MySQL (`orders` y `order_items`) cuando hay credenciales
+  - Si no hay credenciales SQL, guarda en base local JSON (`database/local-orders.json`)
+  - Compatible con hosting SQL estándar como BenzaHosting y desarrollo local sin DB externa
 - **Secciones comerciales adicionales**:
   - Cómo trabajamos
   - Portafolio ficticio por rubro
@@ -104,7 +104,7 @@ npm install mysql2
 
 5. Reinicia tu app Node.
 
-> Si las variables no están configuradas, el checkout sigue funcionando, pero el backend responderá que no se persistió en SQL.
+> Si las variables no están configuradas, el checkout sigue funcionando y ahora guarda automáticamente los pedidos en una base local JSON: `database/local-orders.json`.
 
 ## 5) Flujo de compra y checkout
 
