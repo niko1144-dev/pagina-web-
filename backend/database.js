@@ -1,11 +1,19 @@
+const fs = require('fs');
+const path = require('path');
+
 let pool;
+const LOCAL_DB_PATH = path.join(__dirname, '..', 'database', 'local-orders.json');
 
 function getDbConfigFromEnv() {
   const required = ['DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER', 'DB_PASSWORD'];
   const missing = required.filter((key) => !process.env[key]);
 
   if (missing.length > 0) {
-    return { enabled: false, reason: `Faltan variables de entorno: ${missing.join(', ')}` };
+    return {
+      enabled: false,
+      reason: `Faltan variables de entorno: ${missing.join(', ')}`,
+      mode: 'local'
+    };
   }
 
   return {
@@ -17,7 +25,8 @@ function getDbConfigFromEnv() {
     password: process.env.DB_PASSWORD,
     waitForConnections: true,
     connectionLimit: Number(process.env.DB_POOL_SIZE || 10),
-    queueLimit: 0
+    queueLimit: 0,
+    mode: 'mysql'
   };
 }
 
@@ -50,13 +59,62 @@ function getPool() {
   return { pool, reason: null };
 }
 
+function ensureLocalDbFile() {
+  const directory = path.dirname(LOCAL_DB_PATH);
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory, { recursive: true });
+  }
+
+  if (!fs.existsSync(LOCAL_DB_PATH)) {
+    const initialData = {
+      sequence: 1,
+      orders: []
+    };
+    fs.writeFileSync(LOCAL_DB_PATH, JSON.stringify(initialData, null, 2));
+  }
+}
+
+function saveOrderLocal({ customer, order, payment }) {
+  ensureLocalDbFile();
+
+  const raw = fs.readFileSync(LOCAL_DB_PATH, 'utf8');
+  const db = JSON.parse(raw || '{"sequence":1,"orders":[]}');
+
+  const orderId = db.sequence;
+  db.sequence += 1;
+
+  db.orders.push({
+    id: orderId,
+    buy_order: order.buy_order,
+    session_id: order.session_id,
+    token: order.token,
+    customer,
+    total: order.amount,
+    currency: order.currency,
+    items: order.items,
+    payment,
+    created_at: new Date().toISOString()
+  });
+
+  fs.writeFileSync(LOCAL_DB_PATH, JSON.stringify(db, null, 2));
+
+  return {
+    persisted: true,
+    orderId,
+    storage: 'local-json',
+    path: LOCAL_DB_PATH
+  };
+}
+
 async function saveOrder({ customer, order, payment }) {
   const { pool: currentPool, reason } = getPool();
 
   if (!currentPool) {
+    const localResult = saveOrderLocal({ customer, order, payment });
+
     return {
-      persisted: false,
-      reason
+      ...localResult,
+      reason: `${reason}. Se guardó en base local JSON.`
     };
   }
 
@@ -129,7 +187,7 @@ async function saveOrder({ customer, order, payment }) {
 
     await connection.commit();
 
-    return { persisted: true, orderId };
+    return { persisted: true, orderId, storage: 'mysql' };
   } catch (error) {
     await connection.rollback();
     throw error;
