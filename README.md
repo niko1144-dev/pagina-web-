@@ -1,7 +1,7 @@
 # WebVentas Chile - Base comercial de desarrollo web (HTML + CSS + JS + Node.js)
 
 Proyecto profesional y reutilizable para vender servicios de creación de páginas web personalizadas en Chile.
-Incluye catálogo de servicios, planes, carrito funcional, checkout validado, formulario de contacto y backend en Node.js con simulación de pago preparada para integrar Webpay Plus de Transbank.
+Incluye catálogo de servicios, planes, carrito funcional, checkout validado, formulario de contacto y backend en Node.js con integración real de Webpay Plus (Transbank) para Chile.
 
 ## 1) Estructura de archivos
 
@@ -35,9 +35,10 @@ Incluye catálogo de servicios, planes, carrito funcional, checkout validado, fo
 - **Checkout validado**:
   - Nombre, Apellido, Correo, Teléfono, Empresa, Comentarios
   - Validaciones HTML5 + validación backend
-- **Pago simulado funcional (Opción B)**:
-  - Simular éxito o rechazo
-  - Respuesta estructurada similar a una transacción
+- **Pago real con Webpay Plus (Transbank)**:
+  - Creación de transacción
+  - Redirección segura al portal de Transbank
+  - Confirmación (`commit`) al volver al comercio
 - **Persistencia híbrida (MySQL + Local)**:
   - Guarda pedidos en MySQL (`orders` y `order_items`) cuando hay credenciales
   - Si no hay credenciales SQL, guarda en base local JSON (`database/local-orders.json`)
@@ -115,20 +116,25 @@ npm install mysql2
 5. El backend:
    - Valida cliente
    - Valida ítems y total
-   - Genera `buy_order`, `session_id` y token simulado
-   - Simula autorización/rechazo de pago
-   - Inserta pedido en SQL (si DB está configurada)
+   - Genera `buy_order` y `session_id`
+   - Crea transacción real en Webpay Plus
+   - Confirma transacción (`commit`) y persiste estado de pago
 
-## 6) Integración de Webpay Plus (ambiente de pruebas)
+## 6) Integración de Webpay Plus
 
-La implementación actual de pago es simulada para venta de demos. La capa SQL ya está lista para guardar estado transaccional.
+La implementación usa flujo real de Webpay Plus.
+
+- `POST /api/checkout`: crea la transacción en Transbank y entrega `url` + `token`.
+- Frontend redirige mediante `POST` al portal seguro de Webpay.
+- Transbank vuelve a `WEBPAY_RETURN_URL` con `token_ws`.
+- `POST /api/webpay/commit`: confirma la transacción y guarda el pedido en SQL/JSON local.
 
 ## 7) Archivos clave para edición rápida
 
 - `index.html`: estructura de contenido comercial y secciones.
 - `style.css`: estilos, responsividad y apariencia moderna.
 - `script.js`: carrito, resumen, validaciones frontend y conexión backend.
-- `backend/checkout.js`: validaciones de servidor, simulación y persistencia SQL.
+- `backend/checkout.js`: validaciones de servidor, creación/confirmación Webpay y persistencia SQL/local.
 - `backend/database.js`: conexión MySQL y transacción de guardado.
 - `database/schema.sql`: esquema SQL inicial.
-- `server.js`: servidor HTTP en Node.js para frontend + endpoint `/api/checkout`.
+- `server.js`: servidor HTTP en Node.js para frontend + endpoints `/api/checkout` y `/api/webpay/commit`.
