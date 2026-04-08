@@ -11,6 +11,7 @@
   --ok: #0c9b63;
   --border: #dbe3ff;
   --shadow: 0 20px 45px rgba(7, 17, 52, 0.12);
+  --radius: 18px;
 }
 
 * {
@@ -23,6 +24,7 @@ html {
 
 body {
   margin: 0;
+  min-height: 100vh;
   font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
   color: var(--text);
   background: linear-gradient(180deg, #f6f8ff 0%, #eef3ff 100%);
@@ -139,7 +141,8 @@ a {
 }
 
 .hero {
-  background: radial-gradient(circle at top right, #162752 0%, var(--bg) 50%, #080d1f 100%);
+  background: radial-gradient(circle at 80% 10%, rgba(42, 92, 255, 0.5) 0, rgba(22, 39, 82, 0) 34%),
+    radial-gradient(circle at top right, #162752 0%, var(--bg) 52%, #080d1f 100%);
   color: #fff;
 }
 
@@ -195,6 +198,77 @@ h1 {
   font-weight: 700;
 }
 
+
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-top: 1.3rem;
+}
+
+.hero-metrics div {
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  padding: 0.65rem 0.8rem;
+}
+
+.hero-metrics strong {
+  display: block;
+  font-size: 1.2rem;
+  color: #ffffff;
+}
+
+.hero-metrics span {
+  color: #bad0ff;
+  font-size: 0.85rem;
+}
+
+.brands {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+
+.brands-wrap {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.brands-title {
+  margin: 0;
+  color: var(--text-soft);
+  font-weight: 600;
+}
+
+.brands-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.brands-grid span {
+  text-align: center;
+  border: 1px solid var(--border);
+  background: #f8faff;
+  border-radius: 999px;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #36456b;
+}
+
+.card-tag {
+  width: fit-content;
+  margin: 0;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #2044d4;
+  background: #ebf1ff;
+}
+
 .banner {
   background: #ecf6ff;
   border-top: 1px solid var(--border);
@@ -221,15 +295,19 @@ h2 {
   position: relative;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 1rem;
+  border-radius: var(--radius);
+  padding: 1.1rem;
   box-shadow: var(--shadow);
 }
 
 .product-card {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.45rem;
+}
+
+.product-card .btn {
+  margin-top: auto;
 }
 
 .price {
@@ -378,6 +456,7 @@ textarea:focus {
 
 .step,
 .portfolio-item {
+  transition: transform 0.2s ease, border-color 0.2s ease;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -445,6 +524,13 @@ textarea:focus {
 }
 
 @media (max-width: 980px) {
+  .brands-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hero-metrics {
+    grid-template-columns: 1fr;
+  }
   .cards-grid,
   .steps-grid,
   .portfolio-grid,
@@ -479,4 +565,11 @@ textarea:focus {
   .site-header .btn-outline {
     display: none;
   }
+}
+
+.step:hover,
+.portfolio-item:hover,
+.card:hover {
+  transform: translateY(-3px);
+  border-color: #aac2ff;
 }
