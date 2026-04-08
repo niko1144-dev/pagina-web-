@@ -212,7 +212,7 @@
         <div class="container checkout-grid">
           <div>
             <h2>Checkout y solicitud de compra</h2>
-            <p class="section-intro">Completa tus datos y simula el pago. Luego podrás reemplazar el flujo con Webpay Plus.</p>
+            <p class="section-intro">Completa tus datos para iniciar el pago seguro con Webpay Plus (Transbank).</p>
             <form id="checkout-form" novalidate>
               <div class="two-col">
                 <label>Nombre
@@ -237,10 +237,9 @@
                 <textarea name="comentarios" rows="4" placeholder="Objetivo del sitio, rubro, plazos y funcionalidades."></textarea>
               </label>
               <div class="checkout-actions">
-                <button type="submit" class="btn" id="pay-success">Pagar (simular éxito)</button>
-                <button type="button" class="btn btn-danger" id="pay-fail">Simular rechazo</button>
+                <button type="submit" class="btn" id="pay-success">Pagar con Webpay</button>
               </div>
-              <p class="small-note">Este flujo usa simulación funcional preparada para conectar Webpay Plus.</p>
+              <p class="small-note">Al presionar pagar, serás redirigido al portal seguro de Transbank para completar la transacción.</p>
             </form>
             <pre id="checkout-result" class="result-box" aria-live="polite"></pre>
           </div>

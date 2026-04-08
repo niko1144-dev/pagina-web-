@@ -8,6 +8,8 @@ const summaryTotalEl = document.getElementById('summary-total');
 const resultEl = document.getElementById('checkout-result');
 const checkoutForm = document.getElementById('checkout-form');
 
+const CHECKOUT_STORAGE_KEY = 'webpay_checkout_payload';
+
 const currencyFormatter = new Intl.NumberFormat('es-CL', {
   style: 'currency',
   currency: 'CLP',
@@ -88,20 +90,9 @@ function showMessage(message, isError = false) {
   resultEl.textContent = message;
 }
 
-async function processCheckout(mode) {
-  if (!checkoutForm.checkValidity()) {
-    checkoutForm.reportValidity();
-    showMessage('❌ Revisa los campos del formulario antes de continuar.', true);
-    return;
-  }
-
-  if (cart.length === 0) {
-    showMessage('❌ Debes agregar al menos un servicio o plan al carrito.', true);
-    return;
-  }
-
+function buildCheckoutPayload() {
   const formData = new FormData(checkoutForm);
-  const payload = {
+  return {
     customer: {
       nombre: String(formData.get('nombre') || '').trim(),
       apellido: String(formData.get('apellido') || '').trim(),
@@ -114,11 +105,39 @@ async function processCheckout(mode) {
       items: cart,
       total: getTotal(),
       currency: 'CLP'
-    },
-    payment_simulation: mode
+    }
   };
+}
 
-  showMessage('Procesando solicitud y simulación de pago...');
+function redirectToWebpay(url, token) {
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = url;
+
+  const tokenInput = document.createElement('input');
+  tokenInput.type = 'hidden';
+  tokenInput.name = 'token_ws';
+  tokenInput.value = token;
+
+  form.appendChild(tokenInput);
+  document.body.appendChild(form);
+  form.submit();
+}
+
+async function processCheckout() {
+  if (!checkoutForm.checkValidity()) {
+    checkoutForm.reportValidity();
+    showMessage('❌ Revisa los campos del formulario antes de continuar.', true);
+    return;
+  }
+
+  if (cart.length === 0) {
+    showMessage('❌ Debes agregar al menos un servicio o plan al carrito.', true);
+    return;
+  }
+
+  const payload = buildCheckoutPayload();
+  showMessage('Creando transacción segura en Webpay Plus...');
 
   try {
     const response = await fetch('/api/checkout', {
@@ -130,28 +149,80 @@ async function processCheckout(mode) {
     const data = await response.json();
 
     if (!response.ok || !data.ok) {
-      throw new Error(data.error || 'No se pudo procesar la solicitud.');
+      throw new Error(data.error || 'No se pudo iniciar el pago con Webpay.');
     }
 
-    const statusLabel = data.payment?.status === 'AUTHORIZED' ? '✅ Pago exitoso' : '⚠️ Pago rechazado';
+    sessionStorage.setItem(CHECKOUT_STORAGE_KEY, JSON.stringify(payload));
+    showMessage('Redirigiendo a Webpay...');
+    redirectToWebpay(data.webpay.url, data.webpay.token);
+  } catch (error) {
+    showMessage(`❌ ${error.message}`, true);
+  }
+}
+
+async function handleWebpayReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const tokenWs = params.get('token_ws');
+  const tbkToken = params.get('TBK_TOKEN');
+
+  if (tbkToken) {
+    showMessage('⚠️ El pago fue cancelado por el usuario o rechazado en Webpay.', true);
+    window.history.replaceState({}, document.title, window.location.pathname);
+    return;
+  }
+
+  if (!tokenWs) {
+    return;
+  }
+
+  const savedPayloadRaw = sessionStorage.getItem(CHECKOUT_STORAGE_KEY);
+  if (!savedPayloadRaw) {
+    showMessage('⚠️ No se encontraron datos del carrito para confirmar el pago.', true);
+    window.history.replaceState({}, document.title, window.location.pathname);
+    return;
+  }
+
+  showMessage('Confirmando transacción con Webpay...');
+
+  try {
+    const savedPayload = JSON.parse(savedPayloadRaw);
+    const response = await fetch('/api/webpay/commit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        token_ws: tokenWs,
+        ...savedPayload
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'No se pudo confirmar la transacción con Webpay.');
+    }
+
+    const success = data.payment?.status === 'AUTHORIZED' && Number(data.payment?.response_code) === 0;
 
     showMessage(
-      `${statusLabel}\n` +
+      `${success ? '✅ Pago aprobado en Webpay' : '⚠️ Pago no autorizado'}\n` +
         `Orden: ${data.order?.buy_order}\n` +
         `Token: ${data.order?.token}\n` +
         `Cliente: ${data.customer?.nombre} ${data.customer?.apellido}\n` +
         `Total: ${formatCLP(data.order?.amount || 0)}\n` +
         `Mensaje: ${data.message}`,
-      data.payment?.status !== 'AUTHORIZED'
+      !success
     );
 
-    if (data.payment?.status === 'AUTHORIZED') {
+    if (success) {
       checkoutForm.reset();
       cart.length = 0;
       renderCart();
+      sessionStorage.removeItem(CHECKOUT_STORAGE_KEY);
     }
   } catch (error) {
     showMessage(`❌ ${error.message}`, true);
+  } finally {
+    window.history.replaceState({}, document.title, window.location.pathname);
   }
 }
 
@@ -192,16 +263,15 @@ function bindEvents() {
 
   checkoutForm.addEventListener('submit', (event) => {
     event.preventDefault();
-    processCheckout('success');
+    processCheckout();
   });
-
-  document.getElementById('pay-fail').addEventListener('click', () => processCheckout('fail'));
 }
 
 function bootstrap() {
   document.getElementById('year').textContent = new Date().getFullYear();
   renderCart();
   bindEvents();
+  handleWebpayReturn();
 }
 
 bootstrap();

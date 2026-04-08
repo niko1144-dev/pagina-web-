@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { URL } = require('url');
-const { handleCheckout } = require('./backend/checkout');
+const { handleCheckout, handleWebpayCommit } = require('./backend/checkout');
 
 function loadEnvFile() {
   const envPath = path.join(__dirname, '.env');
@@ -103,6 +103,11 @@ function createServer() {
 
     if (req.method === 'POST' && parsedUrl.pathname === '/api/checkout') {
       handleCheckout(req, res);
+      return;
+    }
+
+    if (req.method === 'POST' && parsedUrl.pathname === '/api/webpay/commit') {
+      handleWebpayCommit(req, res);
       return;
     }
 
